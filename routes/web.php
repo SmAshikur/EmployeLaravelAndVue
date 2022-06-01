@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\CityController;
+use App\Http\Controllers\CountryController;
+use App\Http\Controllers\DepartmentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +23,9 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::resource('/country',CountryController::class);
+Route::resource('/city',CityController::class);
+Route::resource('/department',DepartmentController::class);
+Route::get('{any}', function () {
+    return view('employee.index');
+})->where('any', '.*');

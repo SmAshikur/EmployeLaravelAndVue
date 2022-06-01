@@ -23,8 +23,9 @@
             }
         </style>
     </head>
-    <body style="height: 100vh" class="container d-flex justify-content-center align-items-center">
-       <div style="width: 30vw; height:30vh" class="card p-5 m-5 justify-content-center d-flex  ">
+    <body style="height: 100vh; opacity:0.8" class=" flex-column container d-flex justify-content-center align-items-center">
+       <div class="mb-5 p-2 bg-primary card"> <h1>Welcome to my website</h1></div>
+        <div style="width: 30vw; height:30vh" class="card p-5 m-5 justify-content-center d-flex  ">
         @if (Route::has('login'))
         <div class="   ">
              @auth

@@ -14,7 +14,8 @@ class CountryController extends Controller
      */
     public function index()
     {
-        //
+        $countries= Country::get();
+        return view('Country.index',compact('countries'));
     }
 
     /**
@@ -24,7 +25,7 @@ class CountryController extends Controller
      */
     public function create()
     {
-        //
+        return view('Country.create');
     }
 
     /**
@@ -33,9 +34,16 @@ class CountryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request){
+        $request->validate([
+            'name'=>['required','unique:countries,name'],
+            'country_code'=>['required','unique:countries,country_code']
+        ]);
+        $country = new Country();
+        $country->name = $request->name;
+        $country->country_code = $request->country_code;
+        $country->save();
+        return redirect('country')->with('status','Country added successfully');
     }
 
     /**
@@ -46,7 +54,7 @@ class CountryController extends Controller
      */
     public function show(Country $country)
     {
-        //
+
     }
 
     /**
@@ -57,7 +65,7 @@ class CountryController extends Controller
      */
     public function edit(Country $country)
     {
-        //
+        return view('Country.eidt',compact('country'));
     }
 
     /**
@@ -69,7 +77,14 @@ class CountryController extends Controller
      */
     public function update(Request $request, Country $country)
     {
-        //
+        $request->validate([
+            'name'=>['required','unique:countries,name'],
+           // 'country_code'=>['required','unique:countries,country_code']
+        ]);
+        $country->name = $request->name;
+        $country->country_code = $request->country_code;
+        $country->save();
+        return redirect('country')->with('status','Country updated successfully');
     }
 
     /**
@@ -80,6 +95,8 @@ class CountryController extends Controller
      */
     public function destroy(Country $country)
     {
-        //
+        $country->delete();
+        return redirect('country')->with('status','Country Deleted successfully');
+
     }
 }

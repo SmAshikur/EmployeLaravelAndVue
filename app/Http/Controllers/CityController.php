@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\City;
+use App\Models\Country;
 use Illuminate\Http\Request;
 
 class CityController extends Controller
@@ -14,7 +15,8 @@ class CityController extends Controller
      */
     public function index()
     {
-        //
+        $cites =City::get();
+        return view('City.index',compact('cites'));
     }
 
     /**
@@ -22,9 +24,10 @@ class CityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create( )
     {
-        //
+        $countries=Country::get();
+        return view('City.create',compact('countries'));
     }
 
     /**
@@ -35,7 +38,16 @@ class CityController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'=>['required','unique:cities,name'],
+            'country_id'=>['required'],
+        ]);
+        $city = new City();
+        $city->name=$request->name;
+        $city->country_id=$request->country_id;
+        $city->save();
+        return redirect('city')->with('status','City added successfully');
+
     }
 
     /**
@@ -57,7 +69,8 @@ class CityController extends Controller
      */
     public function edit(City $city)
     {
-        //
+        $countries=Country::get();
+        return view('City.eidt',compact('city','countries'));
     }
 
     /**
@@ -69,7 +82,14 @@ class CityController extends Controller
      */
     public function update(Request $request, City $city)
     {
-        //
+        $request->validate([
+            'name'=>['required','unique:cities,name'],
+            'country_id'=>['required'],
+        ]);
+        $city->name=$request->name;
+        $city->country_id=$request->country_id;
+        $city->save();
+        return redirect('city')->with('status','City updated successfully');
     }
 
     /**
@@ -80,6 +100,7 @@ class CityController extends Controller
      */
     public function destroy(City $city)
     {
-        //
+        $city->delete();
+        return redirect('city')->with('status','City Deleted successfully');
     }
 }

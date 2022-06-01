@@ -14,7 +14,8 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        //
+       $depts= Department::get();
+       return view('Departmnet.index' ,compact('depts'));
     }
 
     /**
@@ -24,7 +25,7 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        //
+        return view('Departmnet.create');
     }
 
     /**
@@ -35,7 +36,13 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'=>['required','unique:departments,name']
+        ]);
+        $dept = new Department();
+        $dept->name = $request->name;
+        $dept->save();
+        return redirect('department')->with('status','Department Added Successfully');
     }
 
     /**
@@ -57,7 +64,7 @@ class DepartmentController extends Controller
      */
     public function edit(Department $department)
     {
-        //
+        return view('Departmnet.eidt',compact('department'));
     }
 
     /**
@@ -69,7 +76,13 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, Department $department)
     {
-        //
+        $request->validate([
+            'name'=>['required','unique:departments,name']
+        ]);
+
+        $department->name = $request->name;
+        $department->save();
+        return redirect('department')->with('status','Department Updated Successfully');
     }
 
     /**
@@ -80,6 +93,7 @@ class DepartmentController extends Controller
      */
     public function destroy(Department $department)
     {
-        //
+        $department->delete();
+        return redirect('department')->with('status','Department Delete Successfully');
     }
 }
