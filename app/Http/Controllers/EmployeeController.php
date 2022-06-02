@@ -12,9 +12,25 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $employees = Employee::with(['country','city','department'])->get();
+        if ($request->search) {
+            $employees = Employee::where('name', "like", "%{$request->search}%")
+            ->orWhere('address', "like", "%{$request->search}%")
+            ->with(['country','city','department'])
+            ->get();
+            return response()->json($employees);
+        } elseif ($request->department_id) {
+            $employees = Employee::where('department_id', $request->department_id)
+            ->with(['country','city','department'])->get();
+            return response()->json($employees);
+        }elseif ($request->country_id) {
+            $employees = Employee::where('country_id', $request->country_id)
+            ->with(['country','city','department'])->get();
+            return response()->json($employees);
+        }
+
         return response()->json($employees);
     }
 

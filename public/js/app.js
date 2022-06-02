@@ -5726,36 +5726,95 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'EmployeeIndex',
   data: function data() {
     return {
       employess: [],
       showMessage: false,
-      message: ""
+      selectedDeprtment: null,
+      selectedCountry: null,
+      search: null,
+      message: "",
+      depts: [],
+      countries: []
     };
+  },
+  watch: {
+    search: function search() {
+      this.getEmployee();
+    },
+    selectedDeprtment: function selectedDeprtment() {
+      this.getEmployee();
+    },
+    selectedCountry: function selectedCountry() {
+      this.getEmployee();
+    }
   },
   mounted: function mounted() {
     this.getEmployee();
+    this.getDepts();
+    this.getCountries();
   },
   methods: {
     getEmployee: function getEmployee() {
       var _this = this;
 
-      axios.get('api/employee').then(function (res) {
+      axios.get('api/employee', {
+        params: {
+          search: this.search,
+          department_id: this.selectedDeprtment,
+          country_id: this.selectedCountry
+        }
+      }).then(function (res) {
         _this.employess = res.data;
       })["catch"](function (error) {
         console.log(error);
       });
     },
-    deleteEmployee: function deleteEmployee(id) {
+    getCountries: function getCountries() {
       var _this2 = this;
 
-      axios["delete"]('api/employee/' + id).then(function (res) {
-        _this2.getEmployee();
+      axios.get('/api/employees/countries').then(function (res) {
+        _this2.countries = res.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    getDepts: function getDepts() {
+      var _this3 = this;
 
-        _this2.showMessage = true;
-        _this2.message = res.data;
+      axios.get('/api/employees/departments').then(function (res) {
+        _this3.depts = res.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    deleteEmployee: function deleteEmployee(id) {
+      var _this4 = this;
+
+      axios["delete"]('api/employee/' + id).then(function (res) {
+        _this4.getEmployee();
+
+        _this4.showMessage = true;
+        _this4.message = res.data;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -29462,8 +29521,91 @@ var render = function () {
           ),
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "card-body p-5  " }, [
-          _c("div", { staticClass: "d-flex justify-content-center" }),
+        _c("div", { staticClass: "card-body   " }, [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "d-inline-flex row mt-2 mb-4" }, [
+              _c(
+                "div",
+                {
+                  staticClass: "form-inline d-inline-flex col-md-3 offset-md-2",
+                },
+                [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.search,
+                        expression: "search",
+                      },
+                    ],
+                    staticClass: "form-control mx-1",
+                    attrs: {
+                      placeholder: "Search Employee",
+                      type: "search",
+                      id: "search",
+                    },
+                    domProps: { value: _vm.search },
+                    on: {
+                      input: function ($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.search = $event.target.value
+                      },
+                    },
+                  }),
+                ]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3 offset-md-2" }, [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.selectedDeprtment,
+                        expression: "selectedDeprtment",
+                      },
+                    ],
+                    staticClass: "form-control",
+                    attrs: { placeholder: "Select by Department" },
+                    on: {
+                      change: function ($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function (o) {
+                            return o.selected
+                          })
+                          .map(function (o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.selectedDeprtment = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      },
+                    },
+                  },
+                  _vm._l(_vm.depts, function (dept) {
+                    return _c(
+                      "option",
+                      { key: dept.id, domProps: { value: dept.id } },
+                      [
+                        _vm._v(
+                          "\n                           " +
+                            _vm._s(dept.name) +
+                            "\n                       "
+                        ),
+                      ]
+                    )
+                  }),
+                  0
+                ),
+              ]),
+            ]),
+          ]),
           _vm._v(" "),
           _vm.showMessage
             ? _c("div", [

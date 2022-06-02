@@ -11,10 +11,27 @@
             </div>
 
         </div>
-        <div class="card-body p-5  ">
-            <div class="d-flex justify-content-center">
+        <div class="card-body   ">
+           <div class="row">
+               <div class="d-inline-flex row mt-2 mb-4">
+                    <div class="form-inline d-inline-flex col-md-3 offset-md-2">
+                           <input placeholder="Search Employee" type="search"
+                                            v-model="search"
+                             id="search" class="form-control mx-1">
 
-            </div>
+                    </div>
+
+                   <div class="col-md-3 offset-md-2" >
+                       <select  v-model="selectedDeprtment"
+                       class="form-control" placeholder="Select by Department">
+                           <option v-for="dept in depts" :key="dept.id" :value="dept.id">
+                               {{dept.name}}
+                           </option>
+                       </select>
+                   </div>
+
+               </div>
+           </div>
             <div v-if="showMessage">
                     <div class="alert alert-success">{{ message }}</div>
             </div>
@@ -72,22 +89,56 @@ export default {
         return {
             employess:[],
             showMessage: false,
+            selectedDeprtment:null,
+            selectedCountry:null,
+            search:null,
             message:"",
+            depts:[],
+            countries:[],
         };
     },
-
+    watch: {
+        search() {
+            this.getEmployee();
+        },
+        selectedDeprtment() {
+            this.getEmployee();
+        },
+        selectedCountry() {
+            this.getEmployee();
+        }
+    },
     mounted() {
         this.getEmployee()
+        this.getDepts()
+        this.getCountries()
     },
 
     methods: {
        getEmployee(){
-            axios.get('api/employee').then(res=>{
+            axios.get('api/employee', {
+                    params: {
+                        search: this.search,
+                        department_id: this.selectedDeprtment,
+                        country_id:this.selectedCountry,
+                    }
+                }).then(res=>{
             this.employess=res.data;
         }).catch(error=>{
            console.log(error)
         })
        },
+       getCountries(){
+            axios.get('/api/employees/countries').then(res=>{
+                this.countries=res.data;
+            }).catch(error=>{console.log(error)})
+        },
+        getDepts(){
+            axios.get('/api/employees/departments').then(res=>{
+
+                this.depts=res.data;
+            }).catch(error=>{console.log(error)})
+        },
        deleteEmployee(id){
             axios.delete('api/employee/'+id).then(res=>{
             this.getEmployee();
