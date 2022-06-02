@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EmployeeDataController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,5 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::get('/employees/countries', [EmployeeDataController::class, 'countries']);
-Route::get('/employees/{country}/cites', [EmployeeDataController::class, 'cites']);
+Route::get('/employees/{country}/cities', [EmployeeDataController::class, 'cities']);
 Route::get('/employees/departments', [EmployeeDataController::class, 'departments']);
+Route::apiResource('employee', EmployeeController::class);

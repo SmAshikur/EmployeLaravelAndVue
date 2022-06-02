@@ -14,7 +14,8 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        //
+        $employees = Employee::with(['country','city','department'])->get();
+        return response()->json($employees);
     }
 
     /**
@@ -35,7 +36,21 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+         $request->validate([
+             'name'=>'required',
+         ]);
+         $employee= new Employee();
+         $employee->name = $request->name;
+         $employee->address = $request->address;
+         $employee->country_id = $request->country_id;
+         $employee->city_id = $request->city_id;
+         $employee->department_id = $request->department_id;
+         $employee->birthdate = $request->birthdate;
+         $employee->date_hired = $request->date_hired;
+         $employee->zip_code = $request->zip_code;
+         $employee->save();
+
+         return response()->json($employee);
     }
 
     /**
@@ -46,7 +61,7 @@ class EmployeeController extends Controller
      */
     public function show(Employee $employee)
     {
-        //
+        return response()->json($employee);
     }
 
     /**
@@ -69,7 +84,19 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, Employee $employee)
     {
-        //
+        $request->validate([
+            'name'=>'required',
+        ]);
+        $employee->name = $request->name;
+        $employee->address = $request->address;
+        $employee->country_id = $request->country_id;
+        $employee->city_id = $request->city_id;
+        $employee->department_id = $request->department_id;
+        $employee->birthdate = $request->birthdate;
+        $employee->date_hired = $request->date_hired;
+        $employee->zip_code = $request->zip_code;
+        $employee->save();
+        return response()->json($employee);
     }
 
     /**
@@ -80,6 +107,7 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
-        //
+        $employee->delete();
+        return response()->json('Delete hoye gese vai');
     }
 }
